@@ -142,14 +142,25 @@ shp_dados_df %>%
                color = "black") +
   labs(x = "Longitude",
        y = "Latitude",
-       color = "IDH") +
+       fill = "IDH") +
   scale_fill_viridis_c() +
   theme_bw()
+
+library(plotly)
+
+plotly::ggplotly(shp_dados_df %>% 
+  ggplot() +
+  geom_polygon(aes(x = long, y = lat, group = group, fill = idh, label = NM_MUNICIP),
+               color = "black") +
+  labs(x = "Longitude",
+       y = "Latitude") +
+  scale_fill_viridis_c() +
+  theme_bw())
 
 
 # Utilizando a tmap: ------------------------------------------------------
 tm_shape(shp = shp_dados_sp) +
-  tm_fill(col = "idh", palette = "Blues")
+  tm_fill(col = "idh", palette = "Spectral")
 
 
 # Como saber quais paletas de cores podem ser utilizadas? -----------------
@@ -223,11 +234,16 @@ tm_shape(shp = shp_mundo) +
   tm_borders()
 
 # Observando as variáveis da base de dados do objeto shp_mundo:
-shp_mundo@data %>% 
+shp_dados_sp@data %>% 
   kable() %>%
   kable_styling(bootstrap_options = "striped", 
                 full_width = TRUE, 
                 font_size = 12)
+
+filter_sp <- shp_dados_sp[shp_dados_sp$populacao > 80000,]
+
+tm_shape(shp = filter_sp) + 
+  tm_borders()
 
 # Suponha que a intenção seja a de criar um shapefile da América do Sul. Assim,
 # note que a variável contnnt consegue estratificar os países desejados.
@@ -268,6 +284,5 @@ tm_shape(shp = shp_mercosul) +
   tm_borders(lwd = 1) +
   tm_fill(col = "mercosul") +
   tm_layout(legend.width = 0.8)
-
 
 # FIM ---------------------------------------------------------------------
