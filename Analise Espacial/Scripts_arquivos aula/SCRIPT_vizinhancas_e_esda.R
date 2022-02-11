@@ -203,7 +203,7 @@ shp_sp@data %>%
   kable() %>%
   kable_styling(bootstrap_options = "striped", 
                 full_width = TRUE, 
-                font_size = 12)
+                font_size = 16)
 
 # Para que possamos traçar as distâncias sociais, assumindo como métrica de 
 # distância social o PIB per capita das cidades de SP, devemos estipular uma
@@ -236,7 +236,7 @@ vizinhos_distsocial <- mat2listw(x = matrizW_distsocial)
 # Visualizando a vizinhança estabelecida:
 plot.new()
 plot(shp_sp, border = "lightgray")
-plot(vizinhos.distsocial, 
+plot(vizinhos_distsocial, 
      coordinates(shp_sp), 
      add = TRUE, 
      col = "#FDE725FF")
@@ -307,7 +307,7 @@ listw_queen <- mat2listw(matrizW_queen)
 class(listw_queen)
 
 # Após isso, poderemos utilizar a função
-moran.test(x = shp_sp@data$pib, 
+moran.test(x = shp_sp@data$idh, 
            listw = listw_queen, 
            zero.policy = TRUE)
 
@@ -328,6 +328,8 @@ moran.plot(x = shp_sp@data$idh,
 matrizW_queen_linha <- nb2mat(vizinhos_queen,
                               style = "W",
                               zero.policy = TRUE)
+
+listw_queen <- mat2listw(matrizW_queen_linha)
 
 # Considerando a variável idh do objeto SP.dados, podemos aferir sua Estatística 
 # Moran Local, com o uso da função localmoran(), como se segue:
