@@ -1,10 +1,16 @@
 ###############################################
 # Vamos separar a base em treinamento e teste #
 set.seed(123)
-bool_treino <- stats::runif(dim(titanic)[1])>.25
+bool_treino <- runif(dim(titanic)[1])>.25
+
+table(bool_treino)
+
 
 treino <- titanic[bool_treino,]
 teste  <- titanic[!bool_treino,]
+
+dim(treino)
+dim(teste)
 
 titanic %>% str
 # Deixar a árvore ser feliz
@@ -23,10 +29,14 @@ arvore <- rpart::rpart(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare + Em
 # Verificando a complexidade da árvore
 arvore$frame
 
+
+
 ############################################
 # Avaliar a árvore na base de treino
 p_treino = stats::predict(arvore, treino)
 c_treino = base::factor(ifelse(p_treino[,2]>.5, "Y", "N"))
+(p_treino)
+
 p_teste = stats::predict(arvore, teste)
 c_teste = base::factor(ifelse(p_teste[,2]>.5, "Y", "N"))
 
@@ -36,7 +46,7 @@ sprintf('Acurácia na base de treino: %s ', percent(acc))
 
 tab <- table(c_teste, teste$Survived)
 acc <- (tab[1,1]+tab[2,2])/nrow(teste)
-sprintf('Acurácia na base de treino: %s ', percent(acc))
+sprintf('Acurácia na base de teste: %s ', percent(acc))
 
 
 ###############################
@@ -102,6 +112,8 @@ plotcp(arvore)
 
 tab_cp[which.min(tab_cp[,'xerror']),]
 cp_min <- tab_cp[which.min(tab_cp[,'xerror']),'CP']
+
+cp_min
 
 set.seed(1)
 arvore_poda <- rpart::rpart(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare + Embarked,

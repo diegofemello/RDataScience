@@ -14,7 +14,7 @@ df %>% tail(50)
 
 library(dplyr)
 
-names(df) <- c("Marca", "Carro", "Ano_Modelo", "Combustivel", "Preco", "Cilindradas", "Cambio")
+names(df) <- c("Marca", "Carro", "Ano_Modelo","Combustivel", "Preco", "Cilindradas", "Cambio")
 
 
 df$Carro <- as.factor(df$Carro)

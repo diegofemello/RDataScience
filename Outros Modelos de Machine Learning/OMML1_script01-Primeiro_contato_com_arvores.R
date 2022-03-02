@@ -18,6 +18,9 @@ titanic %>% head
 tmp <- titanic
 tmp$survived <- as.integer(titanic$Survived=="Y")
 
+
+tmp %>% head
+
 ##########################################
 # Função para fazer a análise descritiva #
 # Vamos avaliar a distribuição de sobreviventes por cada variável X
@@ -69,11 +72,13 @@ titanic %>% str
 
 #############################################
 # Vamos construir a árvore de classificação #
-arvore <- rpart(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare + Embarked,
+arvore <- rpart::rpart(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare + Embarked,
                 data=titanic,
                 parms = list(split = 'gini'), # podemos trocar para  'information'
                 method='class' # Essa opção indica que a resposta é qualitativa
 )
+
+arvore
 
 #########################
 # Visualizando a árvore #
@@ -84,6 +89,9 @@ paleta = scales::viridis_pal(begin=.75, end=1)(20)
 rpart.plot::rpart.plot(arvore,
                        box.palette = paleta) # Paleta de cores
 
+# Que também pode ser usado desta forma:
+rpart.plot(arvore)
+
 ##############################
 # Avaliação básica da árvore #
 
@@ -91,12 +99,17 @@ rpart.plot::rpart.plot(arvore,
 
 # Probabilidade de sobreviver
 prob = predict(arvore, titanic)
+prob
 
 # Classificação dos sobreviventes
 class = prob[,2]>.5
+sum(class)
+
 # Matriz de confusão
 tab <- table(class, titanic$Survived)
 tab
 
 acc <- (tab[1,1] + tab[2,2])/ sum(tab)
 acc
+
+arvore$variable.importance
